@@ -1,205 +1,650 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EA SPORTS FC 27 - VS Code Edition</title>
-    <style>
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #00ffcc;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-        .subtitle {
-            color: #8b9bb4;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        #game-container {
-            position: relative;
-            display: inline-block;
-            border: 4px solid #00ffcc;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.3);
-        }
-        canvas {
-            background: linear-gradient(135deg, #13381a, #1b4d22);
-            display: block;
-        }
-        .controls-panel {
-            margin-top: 15px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            padding: 15px;
-            border-radius: 8px;
-            display: inline-block;
-            max-width: 600px;
-        }
-        button {
-            background-color: #00ffcc;
-            color: #0b0f19;
-            border: none;
-            padding: 10px 16px;
-            margin: 6px;
-            font-weight: bold;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        button:hover {
-            background-color: #00b386;
-            transform: translateY(-2px);
-        }
-        .stats {
-            font-size: 16px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOID // Word Hunter</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #080912;
+  --panel: #111426;
+  --purple: #a855f7;
+  --blue: #22d3ee;
+  --text: #f2f4ff;
+  --muted: #858ba8;
+  --green: #4ade80;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  background:
+    radial-gradient(ellipse at 10% 0%, #35135b55, transparent 45%),
+    radial-gradient(ellipse at 100% 100%, #063c5350, transparent 45%),
+    var(--bg);
+}
+
+header {
+  padding: 25px 7%;
+  border-bottom: 1px solid #ffffff12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  font: 900 22px Orbitron, sans-serif;
+  letter-spacing: 3px;
+}
+
+.logo span { color: var(--purple); }
+
+.tag {
+  color: var(--blue);
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+
+main {
+  width: min(1100px, 94%);
+  margin: 45px auto;
+}
+
+.intro { text-align: center; margin-bottom: 32px; }
+
+h1 {
+  font: 900 clamp(27px, 5vw, 48px) Orbitron, sans-serif;
+  margin: 12px 0;
+}
+
+h1 span {
+  color: var(--purple);
+  text-shadow: 0 0 24px #a855f755;
+}
+
+.intro p { color: var(--muted); font-size: 14px; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat, .panel {
+  background: #111426dd;
+  border: 1px solid #ffffff13;
+  border-radius: 14px;
+}
+
+.stat { padding: 16px; text-align: center; }
+
+.stat small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 9px;
+}
+
+.stat strong {
+  font: 700 24px Orbitron, sans-serif;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 18px;
+  align-items: start;
+}
+
+.panel { padding: 20px; }
+
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font: 700 12px Orbitron, sans-serif;
+  letter-spacing: 1px;
+}
+
+.status { color: var(--blue); font-size: 10px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 4px;
+  user-select: none;
+}
+
+.cell {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1px solid #ffffff0b;
+  border-radius: 5px;
+  background: #1a1d32;
+  color: #d7d9ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 700 clamp(9px, 1.5vw, 14px) Orbitron, sans-serif;
+  cursor: pointer;
+  transition: .15s;
+  padding: 0;
+}
+
+.cell:hover {
+  background: #33304f;
+  border-color: var(--purple);
+  color: white;
+}
+
+.cell.selected {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 0 12px #a855f788;
+}
+
+.cell.found {
+  background: #145d4a;
+  border-color: #4ade8055;
+  color: var(--green);
+}
+
+.cell.hint {
+  border-color: var(--blue);
+  box-shadow: 0 0 12px #22d3ee99;
+}
+
+.word-list {
+  display: grid;
+  gap: 9px;
+}
+
+.word {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  padding: 11px 10px;
+  background: #ffffff05;
+  border: 1px solid #ffffff0b;
+  border-radius: 8px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.word.done {
+  color: var(--green);
+  text-decoration: line-through;
+  opacity: .7;
+}
+
+.word small { color: var(--muted); }
+
+.progress {
+  height: 5px;
+  background: #ffffff12;
+  border-radius: 10px;
+  margin: 16px 0 8px;
+  overflow: hidden;
+}
+
+#bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--purple), var(--blue));
+  transition: width .3s;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:hover { transform: translateY(-2px); }
+
+.primary {
+  background: linear-gradient(100deg, var(--purple), #6d5dfc);
+  color: white;
+}
+
+.secondary {
+  background: #20243b;
+  border: 1px solid #ffffff14;
+  color: white;
+}
+
+.actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+#message {
+  min-height: 38px;
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--blue);
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  color: #656b87;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 25px;
+}
+
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; }
+  .grid { gap: 3px; }
+  .panel { padding: 12px; }
+  main { margin-top: 25px; }
+  .cell { border-radius: 3px; }
+  .logo { font-size: 16px; }
+}
+
+@media (min-width: 721px) {
+  .grid { gap: 5px; }
+}
+</style>
 </head>
+
 <body>
+<header>
+  <div class="logo">VOID<span> //</span> HUNTER</div>
+  <div class="tag">BRAIN PROTOCOL V.01</div>
+</header>
 
-    <h1>EA SPORTS FC 27</h1>
-    <div class="subtitle">Match Engine & PlayStyle Simulator</div>
+<main>
+  <section class="intro">
+    <div class="tag">⚡ EXTREME CHALLENGE MODE ⚡</div>
+    <h1>FIND THE <span>HIDDEN</span> WORDS</h1>
+    <p>12 × 12 grid. Diagonal paths. Hidden words. No easy wins.</p>
+  </section>
 
-    <div id="game-container">
-        <canvas id="fieldCanvas" width="800" height="400"></canvas>
+  <div class="stats">
+    <div class="stat">
+      <small>SCORE</small>
+      <strong id="score">0000</strong>
     </div>
-
-    <div class="controls-panel">
-        <div class="stats">
-            Match Score: <span id="score" style="color: #00ffcc;">0</span> | Active PlayStyle / Skill: <span id="activeStyle" style="color: #ffcc00;">None</span>
-        </div>
-        <p style="font-size: 13px; color: #8b9bb4; margin: 6px 0;">Activate an FC 27 feature/skill before releasing your strike into the top bins:</p>
-        <button onclick="activatePlayStyle('Rapid')">⚡ Rapid (Speed Boost)</button>
-        <button onclick="activatePlayStyle('Finesse')">🎯 Finesse Shot (Curve)</button>
-        <button onclick="activatePlayStyle('TikiTaka')">🔄 Tiki-Taka (Quick Build-up)</button>
-        <button onclick="takeShot()" style="background-color: #ffcc00; color: #000;">⚽ Strike / Shoot!</button>
+    <div class="stat">
+      <small>TIME LEFT</small>
+      <strong id="timer">03:00</strong>
     </div>
+    <div class="stat">
+      <small>FOUND</small>
+      <strong id="count">0/10</strong>
+    </div>
+  </div>
 
-    <script>
-        const canvas = document.getElementById('fieldCanvas');
-        const ctx = canvas.getContext('2d');
+  <div class="layout">
+    <section class="panel">
+      <div class="panel-title">
+        <span>01 / SEARCH GRID</span>
+        <span class="status" id="status">SYSTEM READY</span>
+      </div>
 
-        let score = 0;
-        let activePlayStyle = 'None';
+      <div class="grid" id="grid"></div>
 
-        let ball = { x: 100, y: 200, radius: 9, speedX: 0, speedY: 0 };
-        let player = { x: 80, y: 200, radius: 14, color: '#ffcc00' };
-        let target = { x: 760, y: 130, width: 15, height: 140 };
+      <div id="message" role="status">
+        Click the first letter, then the last letter of a word.
+      </div>
 
-        function drawField() {
-            // Pitch background graphics
-            ctx.fillStyle = '#1b4d22';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+      <p class="note">
+        RULES: Words can run horizontally, vertically, or diagonally.
+        They can also be reversed. Find all 10 before time expires.
+      </p>
+    </section>
 
-            // Field lines
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-            ctx.lineWidth = 3;
+    <aside class="panel">
+      <div class="panel-title">
+        <span>02 / TARGETS</span>
+        <span class="status">10 WORDS</span>
+      </div>
 
-            // Halfway line
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, 0);
-            ctx.lineTo(canvas.width / 2, canvas.height);
-            ctx.stroke();
+      <div class="word-list" id="words"></div>
 
-            // Penalty Area Box
-            ctx.strokeRect(canvas.width - 100, 80, 100, 240);
+      <div class="progress"><div id="bar"></div></div>
+      <p class="note" id="progressText">0% complete</p>
 
-            // Goal posts
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(target.x, target.y, target.width, target.height);
+      <div class="actions">
+        <button class="primary" id="hintBtn">⚡ REVEAL HINT (-50)</button>
+        <button class="secondary" id="resetBtn">↻ NEW CHALLENGE</button>
+      </div>
+    </aside>
+  </div>
+</main>
 
-            // Player avatar
-            ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-            ctx.fillStyle = player.color;
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#000';
-            ctx.stroke();
-            ctx.closePath();
+<footer>VOID SYSTEMS © 2026 — THINK FASTER. LOOK CLOSER.</footer>
 
-            // Match ball
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            ctx.closePath();
+<script>
+const SIZE = 12;
+const TIME = 180;
+
+const WORDS = [
+  "ALGORITHM",
+  "PUZZLING",
+  "CHALLENGE",
+  "KEYBOARD",
+  "MYSTERIOUS",
+  "QUANTUM",
+  "ENCRYPTION",
+  "LABYRINTH",
+  "PARADOX",
+  "GLITCH"
+];
+
+const $ = id => document.getElementById(id);
+
+let board, placements, found, selected, score, timeLeft;
+let active = true;
+let timerId;
+let hinted = new Set();
+
+const directions = [
+  [0,1], [1,0], [1,1], [1,-1],
+  [0,-1], [-1,0], [-1,-1], [-1,1]
+];
+
+function makeBoard() {
+  board = Array.from({length: SIZE}, () => Array(SIZE).fill(""));
+  placements = {};
+
+  // Place the longest words first to make the puzzle harder.
+  const sorted = [...WORDS].sort((a,b) => b.length - a.length);
+
+  for (const word of sorted) {
+    let placed = false;
+
+    for (let attempt = 0; attempt < 1500 && !placed; attempt++) {
+      const [dr, dc] = directions[
+        Math.floor(Math.random() * directions.length)
+      ];
+
+      const r = Math.floor(Math.random() * SIZE);
+      const c = Math.floor(Math.random() * SIZE);
+
+      const cells = [];
+      let fits = true;
+
+      for (let i = 0; i < word.length; i++) {
+        const nr = r + dr * i;
+        const nc = c + dc * i;
+
+        if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) {
+          fits = false;
+          break;
         }
 
-        function activatePlayStyle(style) {
-            activePlayStyle = style;
-            document.getElementById('activeStyle').innerText = style;
-            
-            if (style === 'Rapid') {
-                player.x = 180; // Burst forward up the wing
-            } else if (style === 'TikiTaka') {
-                ball.x = 320; // Quick combination passing lane shift
-                ball.y = 200;
-            }
+        const existing = board[nr][nc];
+
+        if (existing && existing !== word[i]) {
+          fits = false;
+          break;
         }
 
-        function takeShot() {
-            let curveFactor = 0;
-            let speedFactor = 13;
+        cells.push([nr,nc]);
+      }
 
-            if (activePlayStyle === 'Finesse') {
-                curveFactor = -3.5; // Bends the ball toward top/bottom corners
-                speedFactor = 10;
-            } else if (activePlayStyle === 'Rapid') {
-                speedFactor = 17;
-            }
+      if (fits) {
+        cells.forEach(([nr,nc], i) => {
+          board[nr][nc] = word[i];
+        });
 
-            ball.speedX = speedFactor;
-            ball.speedY = curveFactor;
-        }
+        placements[word] = cells;
+        placed = true;
+      }
+    }
 
-        function update() {
-            ball.x += ball.speedX;
-            ball.y += ball.speedY;
+    if (!placed) return false;
+  }
 
-            // Goal detection check
-            if (ball.x >= target.x && ball.y >= target.y && ball.y <= target.y + target.height) {
-                score++;
-                document.getElementById('score').innerText = score;
-                resetPlay();
-            }
+  // Fill empty spaces with random letters.
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            // Out-of-bounds reset check
-            if (ball.x > canvas.width || ball.y < 0 || ball.y > canvas.height) {
-                resetPlay();
-            }
-        }
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (!board[r][c]) {
+        board[r][c] = alphabet[
+          Math.floor(Math.random() * alphabet.length)
+        ];
+      }
+    }
+  }
 
-        function resetPlay() {
-            ball.x = player.x + 15;
-            ball.y = player.y;
-            ball.speedX = 0;
-            ball.speedY = 0;
-            activePlayStyle = 'None';
-            document.getElementById('activeStyle').innerText = 'None';
-            player.x = 80;
-        }
+  return true;
+}
 
-        function gameLoop() {
-            update();
-            drawField();
-            requestAnimationFrame(gameLoop);
-        }
+function startGame() {
+  clearInterval(timerId);
 
-        resetPlay();
-        gameLoop();
-    </script>
+  do {
+    if (!makeBoard()) continue;
+    break;
+  } while (true);
+
+  found = new Set();
+  selected = null;
+  hinted = new Set();
+  score = 0;
+  timeLeft = TIME;
+  active = true;
+
+  $("message").textContent =
+    "Click a starting letter, then click the ending letter.";
+  $("status").textContent = "SYSTEM READY";
+
+  render();
+  updateStats();
+
+  timerId = setInterval(() => {
+    if (!active) return;
+
+    timeLeft--;
+    updateStats();
+
+    if (timeLeft <= 0) endGame(false);
+  }, 1000);
+}
+
+function render() {
+  $("grid").innerHTML = "";
+
+  const foundCells = new Set();
+
+  for (const word of found) {
+    placements[word].forEach(([r,c]) => {
+      foundCells.add(`${r},${c}`);
+    });
+  }
+
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      const cell = document.createElement("button");
+      cell.className = "cell";
+      cell.textContent = board[r][c];
+      cell.setAttribute("aria-label",
+        `Row ${r+1}, column ${c+1}, letter ${board[r][c]}`);
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+
+      if (foundCells.has(`${r},${c}`)) {
+        cell.classList.add("found");
+      }
+
+      if (selected && selected.r === r && selected.c === c) {
+        cell.classList.add("selected");
+      }
+
+      if (hinted.has(`${r},${c}`)) {
+        cell.classList.add("hint");
+      }
+
+      cell.addEventListener("click", () => clickCell(r,c));
+      $("grid").appendChild(cell);
+    }
+  }
+
+  $("words").innerHTML = "";
+
+  WORDS.forEach(word => {
+    const item = document.createElement("div");
+    item.className = "word" + (found.has(word) ? " done" : "");
+    item.innerHTML =
+      `<span>${word}</span><small>${found.has(word) ? "✓ FOUND" : word.length + " LETTERS"}</small>`;
+    $("words").appendChild(item);
+  });
+
+  const percent = Math.round(found.size / WORDS.length * 100);
+  $("bar").style.width = percent + "%";
+  $("progressText").textContent = percent + "% complete";
+}
+
+function clickCell(r,c) {
+  if (!active) return;
+
+  hinted.clear();
+
+  if (!selected) {
+    selected = {r,c};
+    $("message").textContent = "Now click the last letter of the word.";
+    render();
+    return;
+  }
+
+  const start = selected;
+  selected = null;
+
+  const dr = r - start.r;
+  const dc = c - start.c;
+
+  // The word must follow a straight horizontal, vertical, or diagonal line.
+  if (!(dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc))) {
+    $("message").textContent = "Invalid path. Choose a straight line!";
+    render();
+    return;
+  }
+
+  const steps = Math.max(Math.abs(dr), Math.abs(dc));
+  const stepR = Math.sign(dr);
+  const stepC = Math.sign(dc);
+
+  let guess = "";
+
+  for (let i = 0; i <= steps; i++) {
+    guess += board[start.r + stepR*i][start.c + stepC*i];
+  }
+
+  const reversed = guess.split("").reverse().join("");
+  const match = WORDS.find(word =>
+    (word === guess || word === reversed) && !found.has(word)
+  );
+
+  if (match) {
+    found.add(match);
+    score += match.length * 100;
+    $("message").textContent = `✓ ${match} discovered! +${match.length * 100} points`;
+    $("status").textContent = "TARGET ACQUIRED";
+    render();
+    updateStats();
+
+    if (found.size === WORDS.length) {
+      endGame(true);
+    }
+  } else {
+    $("message").textContent = "No target found. Try another direction.";
+    $("status").textContent = "SEARCHING...";
+    render();
+  }
+}
+
+function updateStats() {
+  $("score").textContent = String(score).padStart(4,"0");
+  $("count").textContent = `${found.size}/${WORDS.length}`;
+
+  const min = Math.floor(timeLeft / 60);
+  const sec = timeLeft % 60;
+
+  $("timer").textContent =
+    `${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+
+  $("timer").style.color = timeLeft <= 30 ? "#fb7185" : "#f2f4ff";
+}
+
+function endGame(won) {
+  active = false;
+  clearInterval(timerId);
+  $("status").textContent = won ? "MISSION COMPLETE" : "TIME EXPIRED";
+
+  $("message").textContent = won
+    ? `🏆 ALL TARGETS FOUND! Final score: ${score}.`
+    : `⏱ Time is up! You found ${found.size} of ${WORDS.length} words.`;
+
+  if (won) {
+    score += timeLeft * 10;
+    $("message").textContent =
+      `🏆 PERFECT CLEAR! Final score: ${score + 0}.`;
+    updateStats();
+  }
+}
+
+$("hintBtn").addEventListener("click", () => {
+  if (!active) return;
+
+  if (score < 50) {
+    $("message").textContent = "You need at least 50 points for a hint.";
+    return;
+  }
+
+  const remaining = WORDS.filter(word => !found.has(word));
+
+  if (!remaining.length) return;
+
+  const word = remaining[Math.floor(Math.random() * remaining.length)];
+  const cells = placements[word];
+
+  score -= 50;
+  hinted.clear();
+
+  // Reveal the first and last letters of a target.
+  [cells[0], cells[cells.length - 1]].forEach(([r,c]) => {
+    hinted.add(`${r},${c}`);
+  });
+
+  $("message").textContent =
+    `Hint: ${word.length} letters. The first and last letters are glowing.`;
+
+  render();
+  updateStats();
+});
+
+$("resetBtn").addEventListener("click", startGame);
+
+startGame();
+</script>
 </body>
 </html>
