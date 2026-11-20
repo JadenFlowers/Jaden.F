@@ -1,1 +1,52 @@
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f8e9;
+    text-align: center;
+    margin: 0;
+}
+
+nav {
+    background-color: #245c35;
+    padding: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 15px;
+    font-weight: bold;
+}
+
+h1 {
+    color: #245c35;
+    margin-top: 40px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.product {
+    background-color: white;
+    margin: 20px auto;
+    padding: 15px;
+    width: 250px;
+    border-radius: 10px;
+}
+
+button, .button {
+    background-color: #245c35;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+}
+
