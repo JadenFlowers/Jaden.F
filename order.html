@@ -1,1 +1,58 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Place an Order</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="order.html">Order</a>
+    </nav>
+
+    <h1>Buy Rice</h1>
+
+    <p>Price: $15 BZ per bag</p>
+    <p>Available stock: <span id="stock">12</span></p>
+
+    <input type="number" id="quantity"
+    placeholder="Enter quantity" min="1">
+
+    <button onclick="buyRice()">Buy</button>
+
+    <p id="message"></p>
+
+    <script>
+        let stock = 12;
+
+        function buyRice() {
+            let quantity = Number(
+                document.getElementById("quantity").value
+            );
+
+            if (quantity <= 0 || !Number.isInteger(quantity)) {
+                document.getElementById("message").innerText =
+                    "Please enter a valid quantity.";
+            }
+            else if (quantity > stock) {
+                document.getElementById("message").innerText =
+                    "Sorry, not enough stock available.";
+            }
+            else {
+                stock = stock - quantity;
+
+                document.getElementById("stock").innerText = stock;
+
+                document.getElementById("message").innerText =
+                    "Purchase successful! Total: $" +
+                    (quantity * 15) + " BZ";
+            }
+        }
+    </script>
+
+</body>
+</html>
+
